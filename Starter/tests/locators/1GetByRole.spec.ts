@@ -8,7 +8,4 @@ test('Get by Role practice - heading', async ({ page }) => {
     })
 
     await expect(servicesHeading).toBeVisible()
-
-    const servicesText = await servicesHeading.textContent()
-    console.log(servicesText)
 })
