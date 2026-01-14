@@ -23,8 +23,6 @@ jobs:
           cache-dependency-path: ./Starter/package-lock.json
       - name: Install deps
         run: npm ci
-      - name: Build app
-        run: npm run build
         
   test_integration:
     defaults:
