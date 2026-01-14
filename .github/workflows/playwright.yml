@@ -3,6 +3,7 @@ name: Playwright test
 on:
   push:
     branches: ["debug"]
+    
 
 jobs:
   build:
