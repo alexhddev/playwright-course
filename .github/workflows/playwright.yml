@@ -20,9 +20,11 @@ jobs:
 
       - name: Install deps
         run: npm ci
+        working-directory: ./Starter
 
       - name: Build app
         run: npm run build
+        working-directory: ./Starter
   test_integration:
     name: Integration Tests (Playwright)
     runs-on: ubuntu-latest
@@ -34,12 +36,15 @@ jobs:
             node-version: 22
         - name: Install dependencies
           run: npm ci
+          working-directory: ./Starter
         - name: Install Playwright Browsers
           run: npx playwright install --with-deps
+          working-directory: ./Starter
         - name: Run Playwright tests
           run: npx playwright test tests/debug
+          working-directory: ./Starter
         - uses: actions/upload-artifact@v4
           if: ${{ !cancelled() }}
           with:
             name: Integration Tests (Playwright)
-            path: test-results
+            path: Starter/test-results
