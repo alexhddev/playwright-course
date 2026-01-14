@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
@@ -10,27 +10,8 @@ export default defineConfig({
   },
   use: {
     baseURL: 'http://localhost:5000/',
-    headless: false
+    headless: false,
+    screenshot: 'only-on-failure'
   },
-  // projects: [
-  //   {
-  //     name: 'chromium',
-  //     use: { ...devices['Desktop Chrome'], },
-  //     dependencies:[
-  //       'auth-setup'
-  //     ]
-  //   },
-  //   {
-  //     name: 'firefox',
-  //     use: { ...devices['Desktop Firefox'] },
-  //     dependencies:[
-  //       'auth-setup'
-  //     ]
-  //   },
-  //   {
-  //     name: 'auth-setup',
-  //     testMatch: 'tests/setup/Auth.setup.ts',
-  //   }
-  // ]
 
 });
