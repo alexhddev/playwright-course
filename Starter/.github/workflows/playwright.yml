@@ -2,7 +2,7 @@ name: Playwright test
 
 on:
   push:
-    branches: [ "zz-debug" ]
+    branches: ["zz-debug"]
 
 jobs:
   build:
