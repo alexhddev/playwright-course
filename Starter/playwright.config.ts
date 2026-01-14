@@ -11,9 +11,9 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5000/',
     headless: true,
-    // screenshot: 'only-on-failure',
-    // video: 'retain-on-failure',
-    // trace: 'retain-on-failure'
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    trace: 'retain-on-failure'
   },
 
 });
