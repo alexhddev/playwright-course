@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('Debug practice', async ({ page }) => {
+test('Name field value', async ({ page }) => {
     await page.goto('FeedBackForm.html')
 
     const nameField = page.getByLabel('name')
@@ -15,6 +15,4 @@ test('Debug practice', async ({ page }) => {
     await expect(nameField).toHaveValue('John', {
         timeout: 100
     })
-
-
 })
