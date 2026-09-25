@@ -1,15 +1,22 @@
 import { test, expect } from '@playwright/test'
-import { join } from 'path'
 
-test('Upload files', async ({ page }) => {
+const fileInput = '#fileInput'
+const fileList = '#fileListContainer'
+
+test.beforeEach(async ({ page }) => {
     await page.goto('Files.html')
+})
 
+test('shows the empty state before files are selected', async ({ page }) => {
+    await expect(page.locator(fileList)).toHaveText('No files selected')
+    await expect(page.locator('#clearBtn')).toBeHidden()
+})
+
+test('uploads multiple files and displays their sizes', async ({ page }) => {
     const fileName1 = 'file1.txt'
     const fileName2 = 'file2.txt'
 
-    const fileInput = page.locator('#fileInput')
-
-    await fileInput.setInputFiles([
+    await page.locator(fileInput).setInputFiles([
         {
             name: fileName1,
             mimeType: 'text/plain',
@@ -21,19 +28,45 @@ test('Upload files', async ({ page }) => {
             buffer: Buffer.from('Test file')
         }
     ])
-    // verify the file was selected
-    await expect(page.locator('#fileListContainer')).toContainText(fileName1)
-    await expect(page.locator('#fileListContainer')).toContainText(fileName2)
+
+    await expect(page.locator(fileList)).toContainText(fileName1)
+    await expect(page.locator(fileList)).toContainText(fileName2)
+    await expect(page.locator('.file-item')).toHaveCount(2)
+    await expect(page.locator('.file-size').first()).toHaveText('9 Bytes')
+    await expect(page.locator('#clearBtn')).toBeVisible()
 })
 
-test('Download', async ({ page }) => {
-    await page.goto('Files.html')
+test('does not add the same file twice', async ({ page }) => {
+    const file = {
+        name: 'duplicate.txt',
+        mimeType: 'text/plain',
+        buffer: Buffer.from('same content')
+    }
 
-    const downloadPromise = page.waitForEvent('download');
-    await page.getByText('Download document').click();
-    const download = await downloadPromise;
+    await page.locator(fileInput).setInputFiles(file)
+    await page.locator(fileInput).setInputFiles(file)
 
-    const path = join(__dirname, '..', '..', 'test-results', 'files', download.suggestedFilename())
+    await expect(page.locator('.file-item')).toHaveCount(1)
+})
 
-    await download.saveAs(path)
+test('clears all selected files', async ({ page }) => {
+    await page.locator(fileInput).setInputFiles({
+        name: 'file.txt',
+        mimeType: 'text/plain',
+        buffer: Buffer.from('Test file')
+    })
+
+    await page.locator('#clearBtn').click()
+
+    await expect(page.locator(fileList)).toHaveText('No files selected')
+    await expect(page.locator('#clearBtn')).toBeHidden()
+    await expect(page.locator(fileInput)).toHaveValue('')
+})
+
+test('downloads the sample document', async ({ page }) => {
+    const downloadPromise = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Download Document' }).click()
+
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toBe('sample-document.pdf')
 })
